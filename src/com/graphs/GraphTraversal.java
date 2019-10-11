@@ -32,6 +32,7 @@ public class GraphTraversal {
         for(int i=0;i<num_edges;i++){
             String[] node = bufferedReader.readLine().split(" ");
             arrayLists.get(Integer.parseInt(node[0])).add(Integer.parseInt(node[1]));
+            arrayLists.get(Integer.parseInt(node[1])).add(Integer.parseInt(node[0]));
         }
         int source = Integer.parseInt(bufferedReader.readLine());
         dfsTraversal(arrayLists,visited,source);
