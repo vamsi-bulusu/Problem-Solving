@@ -34,8 +34,8 @@ public class LinkedList {
         }
     }
 
-    private void createLoop(Node head, int numNodes){
-        Node temp = head, prev = null;
+    private void createLoop(int numNodes){
+        Node temp = this.head, prev = null;
         if(temp == null)  return;
         Node[] nodes = new Node[numNodes];
         int start = 0;
@@ -48,9 +48,9 @@ public class LinkedList {
         prev.next = nodes[loopToNode];
     }
 
-    private  Boolean detectLoop(Node head){
+    private  Boolean detectLoop(){
         Set<Node> set = new HashSet<>();
-        Node node = head;
+        Node node = this.head;
         while(node != null){
             if(set.contains(node))
                 return true;
@@ -59,8 +59,8 @@ public class LinkedList {
         }
         return false;
     }
-    private void display(Node head){
-        Node temp = head;
+    private void display(){
+        Node temp = this.head;
         while (temp != null){
             System.out.print(temp.data+ " ");
             temp = temp.next;
@@ -68,8 +68,8 @@ public class LinkedList {
         System.out.println();
     }
 
-    private Node middle(Node head){
-        Node slow = head, fast = head;
+    private Node middle(){
+        Node slow = this.head, fast = this.head;
         while (fast != null && fast.next != null){
                 slow = slow.next;
                 fast = fast.next.next;
@@ -77,20 +77,19 @@ public class LinkedList {
         return slow;
     }
 
-    private Node reverse(Node head){
-        Node current = head, nextNode, prev = null;
+    private void reverse(){
+        Node current = this.head, nextNode, prev = null;
         while(current != null){
             nextNode = current.next; current.next = prev;
             prev = current ; current = nextNode;
         }
-        return prev;
+        this.head = prev;
     }
-    private int size(Node head){
+    private int size(){
         int length = 0;
-        Node curr = head;
+        Node curr = this.head;
         while(curr != null){
-            curr = curr.next;
-            length++;
+            curr = curr.next; length++;
         }
         return length;
     }
@@ -100,11 +99,10 @@ public class LinkedList {
         int numNodes = Integer.parseInt(bufferedReader.readLine().trim());
         String[] numbers = Arrays.copyOf(bufferedReader.readLine().split("\\s+"),numNodes);
         LinkedList linkedList = new LinkedList(numbers);
-        linkedList.head = linkedList.reverse(linkedList.head);
-        linkedList.display(linkedList.head);
-        System.out.println(linkedList.middle(linkedList.head));
-        linkedList.createLoop(linkedList.head, linkedList.size(linkedList.head));
-        System.out.println(linkedList.head.data);
-        System.out.println(linkedList.detectLoop(linkedList.head));
+        linkedList.reverse();
+        linkedList.display();
+        System.out.println(linkedList.middle());
+        linkedList.createLoop(linkedList.size());
+        System.out.println(linkedList.detectLoop());
     }
 }
