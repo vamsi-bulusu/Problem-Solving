@@ -3,9 +3,7 @@ package com.leetcode;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class LinkedList {
     private Node head;
@@ -17,12 +15,18 @@ public class LinkedList {
             this.next = null;
         }
     }
-    private static void insert(LinkedList linkedList, int data){
-        if(linkedList.head == null){
-            linkedList.head = new Node(data);
+    private LinkedList(String[] numbers){
+        for (String number : numbers) {
+            int value = Integer.parseInt(number);
+            insert(value);
+        }
+    }
+    private void insert(int data){
+        if(this.head == null){
+            this.head = new Node(data);
         }
         else{
-            Node temp = linkedList.head;
+            Node temp = this.head;
             while(temp.next != null){
                 temp = temp.next;
             }
@@ -30,9 +34,9 @@ public class LinkedList {
         }
     }
 
-    private static LinkedList createLoop(LinkedList linkedList, int numNodes){
-        Node temp = linkedList.head, prev = null;
-        if(temp == null)  return null;
+    private void createLoop(Node head, int numNodes){
+        Node temp = head, prev = null;
+        if(temp == null)  return;
         Node[] nodes = new Node[numNodes];
         int start = 0;
         while (temp != null){
@@ -42,22 +46,21 @@ public class LinkedList {
         Random random = new Random();
         int loopToNode = random.nextInt(numNodes);
         prev.next = nodes[loopToNode];
-        return linkedList;
     }
 
-    private static Boolean detectLoop(LinkedList linkedList){
-        Map<Node,Integer> map = new HashMap<>();
-        Node node = linkedList.head;
+    private  Boolean detectLoop(Node head){
+        Set<Node> set = new HashSet<>();
+        Node node = head;
         while(node != null){
-            if(map.containsKey(node))
+            if(set.contains(node))
                 return true;
-            map.put(node,0);
+            set.add(node);
             node = node.next;
         }
         return false;
     }
-    private static void display(LinkedList linkedList){
-        Node temp = linkedList.head;
+    private void display(Node head){
+        Node temp = head;
         while (temp != null){
             System.out.print(temp.data+ " ");
             temp = temp.next;
@@ -65,8 +68,8 @@ public class LinkedList {
         System.out.println();
     }
 
-    private static Node middle(LinkedList linkedList){
-        Node slow = linkedList.head, fast = linkedList.head;
+    private Node middle(Node head){
+        Node slow = head, fast = head;
         while (fast != null && fast.next != null){
                 slow = slow.next;
                 fast = fast.next.next;
@@ -74,30 +77,34 @@ public class LinkedList {
         return slow;
     }
 
-    private static Node reverse(LinkedList linkedList){
-        Node current = linkedList.head, nextNode, prev = null;
+    private Node reverse(Node head){
+        Node current = head, nextNode, prev = null;
         while(current != null){
             nextNode = current.next; current.next = prev;
             prev = current ; current = nextNode;
         }
         return prev;
     }
-
+    private int size(Node head){
+        int length = 0;
+        Node curr = head;
+        while(curr != null){
+            curr = curr.next;
+            length++;
+        }
+        return length;
+    }
 
     public static void main(String[] args) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         int numNodes = Integer.parseInt(bufferedReader.readLine().trim());
-        LinkedList linkedList = new LinkedList();
-        for(int i = 0;i < numNodes;i++) {
-            int data = Integer.parseInt(bufferedReader.readLine().trim());
-            insert(linkedList, data);
-        }
-        Node middle = middle(linkedList);
-        System.out.println(middle.data);
-        linkedList.head = reverse(linkedList);
-        display(linkedList);
-        linkedList = createLoop(linkedList, numNodes);
-        assert linkedList != null;
-        System.out.println(detectLoop(linkedList));
+        String[] numbers = Arrays.copyOf(bufferedReader.readLine().split("\\s+"),numNodes);
+        LinkedList linkedList = new LinkedList(numbers);
+        linkedList.head = linkedList.reverse(linkedList.head);
+        linkedList.display(linkedList.head);
+        System.out.println(linkedList.middle(linkedList.head));
+        linkedList.createLoop(linkedList.head, linkedList.size(linkedList.head));
+        System.out.println(linkedList.head.data);
+        System.out.println(linkedList.detectLoop(linkedList.head));
     }
 }
