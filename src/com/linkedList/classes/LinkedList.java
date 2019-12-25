@@ -1,40 +1,30 @@
-package com.leetcode;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+package com.linkedList.classes;
+import com.linkedList.interfaces.List;
 import java.util.*;
 
-public class LinkedList {
+public class LinkedList<T> implements List<T> {
+
     private Node head;
-    static class Node{
-        int data;
-        Node next;
-        Node(int data) {
-            this.data = data;
-            this.next = null;
+
+    public LinkedList(T[] numbers){
+        for (T number : numbers) {
+            add(number);
         }
     }
-    private LinkedList(String[] numbers){
-        for (String number : numbers) {
-            int value = Integer.parseInt(number);
-            insert(value);
-        }
-    }
-    private void insert(int data){
+    public void add(T data){
         if(this.head == null){
-            this.head = new Node(data);
+            this.head = new Node<>(data);
         }
         else{
             Node temp = this.head;
             while(temp.next != null){
                 temp = temp.next;
             }
-            temp.next = new Node(data);
+            temp.next = new Node<>(data);
         }
     }
 
-    private void createLoop(int numNodes){
+    public void createLoop(int numNodes){
         Node temp = this.head, prev = null;
         if(temp == null)  return;
         Node[] nodes = new Node[numNodes];
@@ -48,7 +38,7 @@ public class LinkedList {
         prev.next = nodes[loopToNode];
     }
 
-    private  Boolean detectLoop(){
+    public Boolean detectLoop(){
         Set<Node> set = new HashSet<>();
         Node node = this.head;
         while(node != null){
@@ -59,7 +49,7 @@ public class LinkedList {
         }
         return false;
     }
-    private void display(){
+    public void display(){
         Node temp = this.head;
         while (temp != null){
             System.out.print(temp.data+ " ");
@@ -68,7 +58,7 @@ public class LinkedList {
         System.out.println();
     }
 
-    private Node middle(){
+    public Node middle(){
         Node slow = this.head, fast = this.head;
         while (fast != null && fast.next != null){
                 slow = slow.next;
@@ -77,7 +67,7 @@ public class LinkedList {
         return slow;
     }
 
-    private void reverse(){
+    public void reverse(){
         Node current = this.head, nextNode, prev = null;
         while(current != null){
             nextNode = current.next; current.next = prev;
@@ -85,7 +75,7 @@ public class LinkedList {
         }
         this.head = prev;
     }
-    private int size(){
+    public int size(){
         int length = 0;
         Node curr = this.head;
         while(curr != null){
@@ -94,15 +84,4 @@ public class LinkedList {
         return length;
     }
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-        int numNodes = Integer.parseInt(bufferedReader.readLine().trim());
-        String[] numbers = Arrays.copyOf(bufferedReader.readLine().split("\\s+"),numNodes);
-        LinkedList linkedList = new LinkedList(numbers);
-        linkedList.reverse();
-        linkedList.display();
-        System.out.println(linkedList.middle());
-        linkedList.createLoop(linkedList.size());
-        System.out.println(linkedList.detectLoop());
-    }
 }
