@@ -59,6 +59,16 @@ public class Graph {
         System.out.println();
     }
 
+    private void recursiveDfs(int source){
+        this.visited[source] = true;
+        System.out.print(source + " ");
+        LinkedList<Integer> list = this.linkedLists.get(source);
+        for (int integer : list) {
+            if (!this.visited[integer])
+                recursiveDfs(integer);
+        }
+    }
+
     public static void main(String[] args) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         int numNodes = Integer.parseInt(bufferedReader.readLine().trim());
@@ -73,7 +83,8 @@ public class Graph {
             graph1.add(Source, Destination);
         }
         int source = Integer.parseInt(bufferedReader.readLine().trim());
-        graph.bfsTraversal(source);
-        graph1.dfsTraversal(source);
+        //graph.bfsTraversal(source);
+        //graph1.dfsTraversal(source);
+          graph.recursiveDfs(source);
     }
 }
