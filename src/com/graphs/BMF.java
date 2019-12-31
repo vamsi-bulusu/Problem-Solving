@@ -32,10 +32,12 @@ public class BMF {
     }
 
     private void printArray(int[] dist){
-        for(int dis: dist){
-            System.out.println(dis);
+        for(int i = 1;i < dist.length;i++){
+            System.out.print(dist[i]+" ");
         }
     }
+
+
     private void bmf(int source){
         int[] dist = new int[this.V];
         Arrays.fill(dist, Integer.MAX_VALUE);
