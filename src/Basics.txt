@@ -1,0 +1,67 @@
+Java Generics :
+-------------------------------
+--> Reason to add Generics --> Remove risk of ClassCastException and provide Compile Time Type Checking.
+--> Introduced             --> During JDK 5.0
+--> We can sometimes just parameterize the methods rather than the whole class.
+--------------------------------
+Example for generic interface :
+--------------------------------
+public interface Comparable<T> {
+    public int compareTo(T o);
+}
+--------------------------------
+Java Generics Bounded Type Parameters:
+--------------------------------------
+public static <T extends Comparable<T>> int compare(T t1, T t2){
+		return t1.compareTo(t2);
+	}
+Here we restrict the type of the objects to be of type comparable's
+---------------------------------------
+Java Generics and inheritance :
+--------------------------------------
+        String str = "abc";
+		Object obj = new Object();
+		obj=str; // works because String is-a Object, inheritance in java
+
+		MyClass<String> myClass1 = new MyClass<String>();
+		MyClass<Object> myClass2 = new MyClass<Object>();
+		//myClass2=myClass1; // compilation error since MyClass<String> is not a MyClass<Object>
+		obj = myClass1; // MyClass<T> parent is Object
+Inference : We can subtype only objects of its parent types
+--------------------------------------
+Java Generic WildCards:
+----------------------
+Question mark (?) is the wildcard in generics and represent an unknown type.
+The wildcard can be used as the type of a parameter, field, or local variable and sometimes as a return type.
+We can’t use wildcards while invoking a generic method or instantiating a generic class.
+In the following sections, we will learn about upper bounded wildcards,
+lower bounded wildcards, and wildcard capture.
+Java generics UpperBound wildcard Example :
+------------------------------------------
+public static double sum(List<? extends Number> list){
+		double sum = 0;
+		for(Number n : list){
+			sum += n.doubleValue();
+		}
+		return sum;
+	}
+------------------------------------------
+Java generic UNBounded WildCard Example :
+------------------------------------------
+public static void printData(List<?> list){
+		for(Object obj : list){
+			System.out.print(obj + "::");
+		}
+	}
+------------------------------------------
+Java Generics Lower bounded Wildcard :
+------------------------------------------
+Suppose we want to add Integers to a list of integers in a method,
+we can keep the argument type as List<Integer> but it will be tied up with Integers whereas List<Number> and
+List<Object> can also hold integers, so we can use a lower bound wildcard to achieve this.
+We use generics wildcard (?) with super keyword and lower bound class to achieve this.
+                                  -------------
+We can pass lower bound or any supertype of lower bound as an argument, in this case, java compiler allows to add lower bound object types to the list.
+
+
+
