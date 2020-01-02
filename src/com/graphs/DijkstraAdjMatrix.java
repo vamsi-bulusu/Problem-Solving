@@ -43,11 +43,12 @@ public class DijkstraAdjMatrix {
         for(int i = 1;i < distance.length;i++){
             System.out.print(distance[i] + " ");
         }
+        System.out.println();
     }
     private void printMatrix(){
-        for(int i = 0;i < this.adjMatrix.length;i++){
-            for (int j = 0;j < this.adjMatrix.length;j++){
-                System.out.print(this.adjMatrix[i][j]+ " ");
+        for (int[] matrix : this.adjMatrix) {
+            for (int j = 0; j < this.adjMatrix.length; j++) {
+                System.out.print(matrix[j] + " ");
             }
             System.out.println();
         }
