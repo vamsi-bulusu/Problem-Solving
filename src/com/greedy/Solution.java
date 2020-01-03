@@ -1,4 +1,3 @@
-package com.graphs;
 
 import java.io.BufferedReader;
 import java.io.IOException;
