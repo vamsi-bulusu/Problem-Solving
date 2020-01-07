@@ -53,18 +53,16 @@ class Family {
         this.families = new HashSet<>();
     }
 
-    void makeFamily(Person father, Person mother, RelationshipStatus status){
-         this.person = father;
-         this.person1 = mother;
-         this.status = status;
-         this.families = new HashSet<>();
+    Family makeFamily(Person person, Person person1){
+        return new Family(person, person1, RelationshipStatus.MARRIED);
     }
+
     Family makeChild(Person person){
         return new Family(person, RelationshipStatus.SINGLE);
     }
 
     String getMother(){
-        Person p = person.getGender() == Gender.FEMALE ? person : person1;
+        Person p = person.getGender() == Gender.Female ? person : person1;
         return p.getName();
     }
 
