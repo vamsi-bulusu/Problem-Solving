@@ -1,6 +1,8 @@
 package com.geektrust;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 class Family {
@@ -8,7 +10,7 @@ class Family {
     private RelationshipStatus status;
     private Set<Family> families;
 
-    public Person getPerson() {
+    Person getPerson() {
         return person;
     }
 
@@ -20,7 +22,7 @@ class Family {
         return person1;
     }
 
-    public void setPerson1(Person person1) {
+    void setPerson1(Person person1) {
         this.person1 = person1;
     }
 
@@ -28,7 +30,7 @@ class Family {
         return status;
     }
 
-    public void setStatus(RelationshipStatus status) {
+    void setStatus(RelationshipStatus status) {
         this.status = status;
     }
 
@@ -43,7 +45,7 @@ class Family {
     private Family(Person person, RelationshipStatus status) {
         this.person = person;
         this.status = status;
-        this.families = null;
+        this.families = new HashSet<>();
     }
 
     Family(Person person, Person person1, RelationshipStatus status) {
@@ -53,10 +55,6 @@ class Family {
         this.families = new HashSet<>();
     }
 
-    Family makeFamily(Person person, Person person1){
-        return new Family(person, person1, RelationshipStatus.MARRIED);
-    }
-
     Family makeChild(Person person){
         return new Family(person, RelationshipStatus.SINGLE);
     }
@@ -64,6 +62,20 @@ class Family {
     String getMother(){
         Person p = person.getGender() == Gender.Female ? person : person1;
         return p.getName();
+    }
+
+     List<String> getSonOrDaughter(String relation){
+        List<String> list = new LinkedList<>();
+        Gender gender = relation.equals("Son") ? Gender.Male : Gender.Female;
+        for (Family family:families) {
+            if(gender.equals(Gender.Male)){
+                list.add(family.getPerson().getName());
+            }
+            else{
+                list.add(family.getPerson().getName());
+            }
+        }
+        return list;
     }
 
 }
