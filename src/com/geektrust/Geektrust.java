@@ -1,7 +1,9 @@
 package com.geektrust;
 
 import java.io.*;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
 
 public class Geektrust {
@@ -34,7 +36,7 @@ public class Geektrust {
         String motherName = query[1], childName = query[2], childGender = query[3];
         String mother = familyHead.getStatus() == RelationshipStatus.SINGLE ? familyHead.getPerson().getName() : familyHead.getMother();
         if(mother.equals(motherName)){
-            exist = false;
+            exist = true;
         }
         if(familyHead.getStatus() == RelationshipStatus.MARRIED){
             if(mother.equals(motherName)){
@@ -74,24 +76,50 @@ public class Geektrust {
         return false;
     }
 
-    private List<String> sonOrDaughter(Family familyHead, String[] query){
-        String name = query[1], relation = query[2];
-        if(familyHead == null){
+    private List<String> siblings(Family familyHead,String[] query){
+        String name = query[1];
+        Queue<Family> queue = new LinkedList<>();
+        queue.add(familyHead);
+        List<String> siblings = new LinkedList<>();
+        if(name.equals(familyHead.getPerson().getName()) || name.equals(familyHead.getPerson1().getName())){
+            exist = true;
             return null;
         }
-        if(familyHead.getStatus() == RelationshipStatus.SINGLE && name.equals(familyHead.getPerson().getName())){
-                exist = false;
-                return familyHead.getSonOrDaughter(relation);
-        }
-        else if(familyHead.getStatus() == RelationshipStatus.MARRIED && name.equals(familyHead.getPerson().getName()) || name.equals(familyHead.getPerson1().getName())){
-                exist = false;
-                return familyHead.getSonOrDaughter(relation);
-        }
-        else{
-            Set<Family> families = familyHead.getFamilies();
-            for (Family family:families) {
-                return sonOrDaughter(family,query);
+        while (!queue.isEmpty()){
+            Family family = queue.poll();
+            Set<Family> families = family.getFamilies();
+            for(Family family1:families){
+                siblings.add(family1.getPerson().getName());
+                queue.add(family1);
             }
+            if(!siblings.isEmpty())
+                if(siblings.contains(name)){
+                    exist = true;
+                siblings.remove(name);
+                return siblings;
+            }
+            siblings.clear();
+        }
+        return siblings;
+    }
+
+    private List<String> sonOrDaughter(Family familyHead, String[] query){
+        String name = query[1], relation = query[2];
+        Queue<Family> families = new LinkedList<>();
+        families.add(familyHead);
+        while (!families.isEmpty()){
+              Family family = families.poll();
+              if(family.getStatus() == RelationshipStatus.SINGLE && name.equals(family.getPerson().getName()) ){
+                  exist = true;
+              }
+              if(family.getStatus() == RelationshipStatus.MARRIED){
+                  if(name.equals(family.getPerson().getName()) || name.equals(family.getPerson1().getName())){
+                      exist = true;
+                      return family.getSonOrDaughter(relation);
+                  }
+              }
+              Set<Family> set = family.getFamilies();
+              families.addAll(set);
         }
         return null;
     }
@@ -107,28 +135,42 @@ public class Geektrust {
         System.out.println("Tree Generated Successfully");
         while (testCases-- != 0){
             String[] query = reader.readLine().split("\\s+");
-            exist = true;
+            exist = false;
             if(query[0].equals("ADD_CHILD")){
                 Boolean success = geektrust.addChild(geektrust.familyHead, query);
-                System.out.println(exist ? "PERSON_NOT_FOUND" : (success ? "CHILD_ADDITION_SUCCEEDED" : "CHILD_ADDITION_FAILED"));
+                System.out.println(!exist ? "PERSON_NOT_FOUND" : (success ? "CHILD_ADDITION_SUCCEEDED" : "CHILD_ADDITION_FAILED"));
             }
             else{
                 if(query[2].equals("Son") || query[2].equals("Daughter")){
                    List<String> temp = geektrust.sonOrDaughter(geektrust.familyHead, query);
-                   if(temp != null && temp.size() != 0){
-                       for (String s:temp){
+                   if(exist && temp == null){
+                       System.out.println("NONE");
+                   }
+                   else if(temp == null){
+                       System.out.println("PERSON_NOT_FOUND");
+                   }
+                   else{
+                       for (String s:temp) {
                            System.out.print(s + " ");
                        }
                    }
-                   else if(!exist && temp == null){
-                       System.out.print("None");
-                   }
-                   else{
-                       System.out.print("PERSON_NOT_FOUND");
-                   }
+                }
+                else if(query[2].equals("Siblings")){
+                    List<String> list = geektrust.siblings(geektrust.familyHead, query);
+                    assert list != null;
+                    if(exist && list.isEmpty()){
+                        System.out.println("NONE");
+                    }
+                    if(!exist){
+                        System.out.println("PERSON_NOT_FOUND");
+                    }
+                    else {
+                        for (String s:list) {
+                            System.out.print(s + " ");
+                        }
+                    }
                 }
             }
         }
     }
-
 }

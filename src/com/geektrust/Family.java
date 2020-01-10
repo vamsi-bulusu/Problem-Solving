@@ -18,7 +18,7 @@ class Family {
         this.person = person;
     }
 
-    public Person getPerson1() {
+    Person getPerson1() {
         return person1;
     }
 
@@ -68,10 +68,7 @@ class Family {
         List<String> list = new LinkedList<>();
         Gender gender = relation.equals("Son") ? Gender.Male : Gender.Female;
         for (Family family:families) {
-            if(gender.equals(Gender.Male)){
-                list.add(family.getPerson().getName());
-            }
-            else{
+            if(gender.equals(family.getPerson().getGender())){
                 list.add(family.getPerson().getName());
             }
         }
